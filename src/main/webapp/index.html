@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!--
+BluetoothTrafficElaboration: various elaborations of traffic data
+
+Copyright (C) 2017 IDM Südtirol - Alto Adige - Italy
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+<!--
+     Author: Davide Montesin <d@vide.bz>
+ -->
+<html>
+<head>
+<script src="http://davide.bz/crashbox-catcher-javascript-browser/0.0.1-SNAPSHOT.js"></script>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<link rel="stylesheet" type="text/css" href="index.css">
+<script src="index.js"></script>
+</head>
+<body>
+   <h1>Dashboard</h1>
+   Scheduler is:
+   <span id="sched_live" style="background-color: #00FF00"></span>.
+   Elaboration is
+   <span>running</span> /
+   <span>sleeping</span>.
+   <p>Provisional intervall is: 24h
+   <p>Elaboration intervall is: 15m
+   <h2>Tasks</h2>
+   <table id="task">
+      <tr>
+         <td>calc_order</td>
+         <td>function_name</td>
+         <td>args</td>
+         <td>enabled</td>
+         <td>last_run_time</td>
+         <td>status</td>
+      </tr>
+      <tr id="task-row-template">
+         <td style="text-align: right">calc_order</td>
+         <td>function_name</td>
+         <td>args</td>
+         <td>enabled</td>
+         <td>last_run_time</td>
+         <td>status</td>
+      </tr>
+   </table>
+   <h2>Log tail</h2>
+   <table id="logtail"></table>
+   <script>
+            window.com_idmsuedtirol_bte();
+         </script>
+</body>
+</html>
