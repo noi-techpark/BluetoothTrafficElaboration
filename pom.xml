@@ -27,6 +27,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <version>0.0.1-SNAPSHOT</version>
   <name>bluetoothtrafficelaboration Maven Webapp</name>
   <url>http://maven.apache.org</url>
+  <repositories>
+    <repository>
+      <id>crashbox-repository</id>
+      <url>http://davide.bz/maven/</url>
+      <snapshots>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -48,6 +57,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.5</version>
+    </dependency>
+    <dependency>
+      <groupId>bz.davide.crashbox</groupId>
+      <artifactId>crashbox-catcher-java-web</artifactId>
+      <version>0.0.1</version>
     </dependency>
   </dependencies>
   <build>
