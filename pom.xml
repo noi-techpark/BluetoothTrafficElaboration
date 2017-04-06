@@ -36,6 +36,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </snapshots>
     </repository>
   </repositories>
+  <properties>
+  	<java.version>7</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -77,5 +81,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </dependencies>
   <build>
     <finalName>bluetoothtrafficelaboration</finalName>
+    <plugins>
+    	<plugin>
+        	<groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                	<source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+	</plugin>
+    </plugins>
   </build>
 </project>
