@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  -->
 <html>
 <head>
-<script src="http://davide.bz/crashbox-catcher-javascript-browser/0.0.1-SNAPSHOT.js"></script>
+<script
+   src="http://davide.bz/crashbox-catcher-javascript-browser/0.0.1-SNAPSHOT.js"></script>
 <meta charset="UTF-8">
 <title>Dashboard</title>
 <link rel="stylesheet" type="text/css" href="index.css">
@@ -31,33 +32,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <body>
    <h1>Dashboard</h1>
    Scheduler is:
-   <span id="sched_live" style="background-color: #00FF00"></span>.
-   Elaboration is
-   <span>running</span> /
-   <span>sleeping</span>.
-   <p>Provisional intervall is: 24h
-   <p>Elaboration intervall is: 15m
+   <span id="sched_live" ><span class="alive" style="background-color: #00FF00">alive</span><span class="dead" style="background-color: #FF0000">dead</span></span>
+   Task Thread is:
+   <span id="task_thread_status" ><span class="running" style="background-color: #00FF00">running</span><span class="sleeping" style="background-color: #CCCCCC">sleeping</span></span>
    <h2>Tasks</h2>
+   last refresh:
+   <span id="last_refresh">now</span>
+   <p>
    <table id="task">
       <tr>
-         <td>calc_order</td>
+         <td style="text-align: right">#</td>
          <td>function_name</td>
          <td>args</td>
          <td>enabled</td>
-         <td>last_run_time</td>
-         <td>status</td>
+         <td>last_start_time</td>
+         <td>last_duration</td>
+         <td>last_status</td>
+         <td>since (days)</td>
+         <td>last_run_output</td>
       </tr>
       <tr id="task-row-template">
-         <td style="text-align: right">calc_order</td>
+         <td style="text-align: right">#</td>
          <td>function_name</td>
          <td>args</td>
          <td>enabled</td>
-         <td>last_run_time</td>
-         <td>status</td>
+         <td style="white-space:nowrap">last_start_time</td>
+         <td>last_duration</td>
+         <td>last_status</td>
+         <td>same_status_since (days)</td>
+         <td class="forcewrap">last_run_output</td>
       </tr>
    </table>
-   <h2>Log tail</h2>
-   <table id="logtail"></table>
    <script>
             window.com_idmsuedtirol_bte();
          </script>

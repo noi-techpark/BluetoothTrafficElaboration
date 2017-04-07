@@ -18,32 +18,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-
 package com.idmsuedtirol.bluetoothtrafficelaboration;
-
-import java.util.ArrayList;
 
 /**
  * @author Davide Montesin <d@vide.bz>
  */
-public class ElaborationsInfo
+public class ElaborationCountBluetooth
 {
-   public static class TaskInfo
+   static String doElaboration(String args)
    {
-      long    id;
-      int     calc_order;
-      String  function_name;
-      String  args;
-      boolean enabled;
-      boolean running;
-      String  last_start_time;
-      String  last_duration;
-      String  last_status;
-      String  same_status_since;
-      String  last_run_output;
+      // TODO implements elaboration
+      return String.format("insert: %5d | update: %5d | delete: %5d", 0, 0, 0);
    }
-
-   boolean             taskThreadAlive;
-   boolean             tashThreadRunning;
-   ArrayList<TaskInfo> tasks = new ArrayList<TaskInfo>();
 }

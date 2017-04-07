@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 table {
    border-collapse: collapse;
+   width:100%;
 }
 
 table, th, td {
@@ -46,8 +47,41 @@ td.FAIL {
    background-color: #FF6666;
 }
 
-td.RUNNING {
+td.PREV-FAIL {
+   background-color: yellow;
+}
+
+tr.RUNNING {
    animation-name: running;
    animation-duration: 1s;
    animation-iteration-count: infinite;
+}
+
+@keyframes running {
+    0%   {background-color: #CCCCCC;}
+    50%  {background-color: #FFFFFF;}
+    100%   {background-color: #CCCCCC;}
+}
+
+.alive > .dead, .dead > .alive
+{
+   display:none;
+}
+
+.running > .sleeping, .sleeping > .running
+{
+   display:none;
+}
+
+/* http://stackoverflow.com/questions/499137/css-how-can-i-force-a-long-string-without-any-blank-to-be-wrapped-in-xul-and */
+.forcewrap
+{
+white-space: -moz-pre-wrap; /* Mozilla */
+white-space: -hp-pre-wrap; /* HP printers */
+white-space: -o-pre-wrap; /* Opera 7 */
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: pre-wrap; /* CSS 2.1 */
+white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
+word-wrap: break-word; /* IE */
+word-break: break-all;
 }

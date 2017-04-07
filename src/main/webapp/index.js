@@ -26,10 +26,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    window.com_idmsuedtirol_bte = function()
    {
       
+      var start_time = new Date().getTime();
+
       request_data();
 
       function request_data()
       {
+         var now = new Date().getTime();
+
+         if (now - start_time > 1000 * 60 * 10)
+         {
+            alert('Press ok to continue realtime monitoring ...');
+            start_time = new Date().getTime();
+         }
+
          var xhttp = new XMLHttpRequest();
          xhttp.onreadystatechange = function()
          {
@@ -39,10 +49,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                {
                   var data = JSON.parse(this.responseText);
                   refresh_ui(data)
+                  setTimeout(function()
+                  {
+                     request_data();
+                  }, 5000);
                }
                else
                {
-                  alert('Error: ' + this.status)
+                  // TODO report error, then retry after some seconds
+                  // alert('Error: ' + this.status)
+                  setTimeout(function()
+                  {
+                     request_data();
+                  }, 5000);
                }
             }
          };
@@ -50,13 +69,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          xhttp.send();
       }
 
+      var taskRow = document.getElementById('task-row-template');
+      taskRow.parentElement.removeChild(taskRow);
+      var prevTaskTableRows = [];
+
       function refresh_ui(data)
       {
+
+         document.getElementById('last_refresh').innerText = new Date().toString();
          var tasktable = document.getElementById('task');
-         document.getElementById('sched_live').innerText = data.taskThreadAlive;
-         var taskRow = document.getElementById('task-row-template');
-         taskRow.parentElement.removeChild(taskRow);
+         document.getElementById('sched_live').className = data.taskThreadAlive ? 'alive' : 'dead';
+         document.getElementById('task_thread_status').className = data.tashThreadRunning ? 'running' : 'sleeping';
          var tasks = data.tasks;
+         // remove previuos data
+         for (var i = 0; i < prevTaskTableRows.length; i++)
+         {
+            prevTaskTableRows[i].parentElement.removeChild(prevTaskTableRows[i])
+         }
+         prevTaskTableRows = []
          for (var i = 0; i < tasks.length; i++)
          {
             var taskTr = taskRow.cloneNode(true);
@@ -66,12 +96,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             tds[1].innerText = task.function_name
             tds[2].innerText = task.args
             tds[3].innerText = task.enabled
-            tds[4].innerText = task.last_run_time
-            tds[5].innerText = task.status
-            tds[5].className = task.status
+            tds[4].innerText = task.last_start_time
+            if (task.running)
+               taskTr.className = 'RUNNING'
+            else
+               taskTr.className = ''
+            tds[5].innerText = task.last_duration
+            tds[6].innerText = task.last_status
+            tds[6].className = task.last_status
+            tds[7].innerText = task.same_status_since
+            tds[8].innerText = task.last_run_output
             tasktable.appendChild(taskTr)
+            prevTaskTableRows.push(taskTr);
          }
-
       }
    }
 })();
