@@ -18,57 +18,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-/*
-   Author: Davide Montesin <d@vide.bz>
-*/
 
-/* table layout 
-*/
-table {
-   border-collapse: collapse;
-   width:100%;
-}
+package com.idmsuedtirol.bluetoothtrafficelaboration;
 
-table, th, td {
-   border: 1px solid black;
-}
-
-td {
-   padding: 4px;
-}
-
-/* status layout 
-*/
-td.DONE {
-   background-color: #00FF00;
-}
-
-td.FAIL {
-   background-color: #FF6666;
-}
-
-td.PREV-FAIL {
-   background-color: yellow;
-}
-
-tr.RUNNING {
-   animation-name: running;
-   animation-duration: 1s;
-   animation-iteration-count: infinite;
-}
-
-@keyframes running {
-    0%   {background-color: #CCCCCC;}
-    50%  {background-color: #FFFFFF;}
-    100%   {background-color: #CCCCCC;}
-}
-
-.alive > .dead, .dead > .alive
+/**
+ * @author Davide Montesin <d@vide.bz>
+ */
+public class Station
 {
-   display:none;
-}
-
-.running > .sleeping, .sleeping > .running
-{
-   display:none;
+   int    id;
+   String stationcode;
 }

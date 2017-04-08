@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.idmsuedtirol.bluetoothtrafficelaboration;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
@@ -34,16 +35,16 @@ import com.idmsuedtirol.bluetoothtrafficelaboration.ElaborationsInfo.TaskInfo;
  */
 public class TaskThread extends Thread
 {
-   BluetoothTrafficElaborationServlet elaborationServlet;
+   DatabaseHelper databaseHelper;
 
-   boolean                            stop          = false;
-   boolean                            sleeping      = false;
+   boolean        stop          = false;
+   boolean        sleeping      = false;
 
-   final Object                       exclusiveLock = new Object();
+   final Object   exclusiveLock = new Object();
 
-   public TaskThread(BluetoothTrafficElaborationServlet elaborationServlet)
+   public TaskThread(DatabaseHelper databaseHelper)
    {
-      this.elaborationServlet = elaborationServlet;
+      this.databaseHelper = databaseHelper;
    }
 
    @Override
@@ -54,7 +55,7 @@ public class TaskThread extends Thread
          synchronized (this.exclusiveLock)
          {
             this.sleeping = false;
-            Thread.interrupted();
+            Thread.interrupted(); // clear interrupt flag if set
             if (this.stop)
                return;
          }
@@ -90,17 +91,17 @@ public class TaskThread extends Thread
       }
    }
 
-   private void executeElaborations() throws SQLException
+   private void executeElaborations() throws SQLException, IOException
    {
       // TODO log start of elaborations
-      ArrayList<TaskInfo> tasks = this.elaborationServlet.selectTaskInfo();
+      ArrayList<TaskInfo> tasks = this.databaseHelper.newSelectTaskInfo();
       boolean someTaskFail = false;
       for (int i = 0; i < tasks.size(); i++)
       {
          long startTime = System.currentTimeMillis();
          TaskInfo task = tasks.get(i);
-         this.elaborationServlet.executeDatabaseUpdate("update davide.scheduler_task set status = ?, last_run_time = ? where id = ?",
-                                                       new Object[] { "RUNNING", new Timestamp(startTime), task.id });
+         this.databaseHelper.newUpdate("update scheduler_task set status = ?, last_run_time = ? where id = ?",
+                                       new Object[] { "RUNNING", new Timestamp(startTime), task.id });
          // RUNNING
          String status;
          String run_output = "";
@@ -114,7 +115,7 @@ public class TaskThread extends Thread
             {
                if (task.function_name.equals("count_bluetooth_intime"))
                {
-                  run_output = ElaborationCountBluetooth.doElaboration(task.args);
+                  run_output = ElaborationCountBluetooth.doElaboration(this.databaseHelper, task.args);
                }
                else
                {
@@ -135,13 +136,13 @@ public class TaskThread extends Thread
             exxx.printStackTrace(new PrintWriter(sw));
             run_output = sw.toString();
          }
-         this.elaborationServlet.executeDatabaseUpdate("update davide.scheduler_task set status = ? where id = ?",
-                                                       new Object[] { status, task.id });
+         this.databaseHelper.newUpdate("update scheduler_task set status = ? where id = ?",
+                                       new Object[] { status, task.id });
          long finishTime = System.currentTimeMillis();
-         this.elaborationServlet.executeDatabaseUpdate("insert into davide.scheduler_run (task_id, status, start_time, stop_time, run_output) " +
-                                                       " values (?,?,?,?,?)",
-                                                       new Object[] { task.id, status, new Timestamp(startTime),
-                                                             new Timestamp(finishTime), run_output });
+         this.databaseHelper.newUpdate("insert into scheduler_run (task_id, status, start_time, stop_time, run_output) " +
+                                       " values (?,?,?,?,?)",
+                                       new Object[] { task.id, status, new Timestamp(startTime),
+                                             new Timestamp(finishTime), run_output });
          synchronized (this.exclusiveLock)
          {
             if (this.stop)

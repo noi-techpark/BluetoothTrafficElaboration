@@ -30,7 +30,7 @@ with tasks as
 	       enabled, 
 	       -- status,
 	       status = 'RUNNING' running
-     from davide.scheduler_task task
+     from scheduler_task task
     where calc_order is not null
 )
 ,
@@ -39,7 +39,7 @@ tasks_last_run_id as
    select *,
 	       (
 	          select id
-	            from davide.scheduler_run run
+	            from scheduler_run run
 	           where run.task_id = tasks.id
 	           order by run.start_time desc, run.id desc
 	           limit 1
@@ -55,20 +55,20 @@ tasks_last_run as
           last_run.status as last_status,
           last_run.run_output as last_run_output
      from tasks_last_run_id
-     left outer join davide.scheduler_run last_run on tasks_last_run_id.last_run_id = last_run.id
+     left outer join scheduler_run last_run on tasks_last_run_id.last_run_id = last_run.id
 )
 ,
 tasks_last_run_status_since as
 (
    select coalesce(to_char(extract( epoch from (last_start_time - (
              select max(start_time)
-               from davide.scheduler_run since
+               from scheduler_run since
               where since.task_id = tasks_last_run.id
                 and since.status != tasks_last_run.last_status
           )))/(3600*24), '999990.000'), 'always') same_status_since,
           (
           select last_start_time -max(start_time)
-               from davide.scheduler_run since
+               from scheduler_run since
               where since.task_id = tasks_last_run.id
                 and since.status != tasks_last_run.last_status
           ),

@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
    {
       
       var start_time = new Date().getTime();
+      
+      var lastResponseText = '';
 
       request_data();
 
@@ -47,8 +49,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             {
                if (this.status == 200)
                {
-                  var data = JSON.parse(this.responseText);
-                  refresh_ui(data)
+                  document.getElementById('last_refresh').innerText = new Date().toString();
+                  if (lastResponseText != this.responseText)
+                  {
+                     lastResponseText = this.responseText;
+                     var data = JSON.parse(this.responseText);
+                     refresh_ui(data)
+                  }
                   setTimeout(function()
                   {
                      request_data();
@@ -76,7 +83,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       function refresh_ui(data)
       {
 
-         document.getElementById('last_refresh').innerText = new Date().toString();
          var tasktable = document.getElementById('task');
          document.getElementById('sched_live').className = data.taskThreadAlive ? 'alive' : 'dead';
          document.getElementById('task_thread_status').className = data.tashThreadRunning ? 'running' : 'sleeping';
@@ -105,7 +111,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             tds[6].innerText = task.last_status
             tds[6].className = task.last_status
             tds[7].innerText = task.same_status_since
-            tds[8].innerText = task.last_run_output
+            tds[8].getElementsByTagName('textarea')[0].value = task.last_run_output
             tasktable.appendChild(taskTr)
             prevTaskTableRows.push(taskTr);
          }
