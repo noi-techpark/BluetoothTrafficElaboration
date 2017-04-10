@@ -39,6 +39,7 @@ public class TaskThread extends Thread
 
    boolean        stop          = false;
    boolean        sleeping      = false;
+   long           sleepingUntil;
 
    final Object   exclusiveLock = new Object();
 
@@ -68,15 +69,22 @@ public class TaskThread extends Thread
             // TODO send error to crashbox and retry
             exxx.printStackTrace();
          }
+         long sleepTime;
          synchronized (this.exclusiveLock)
          {
             if (this.stop)
                return;
             this.sleeping = true;
+            // Sleep until next :00 minute
+            long now = System.currentTimeMillis();
+            long hour = 3600L * 1000L;
+            long usedPartialHour = now % hour;
+            sleepTime = hour - usedPartialHour;
+            this.sleepingUntil = now + sleepTime;
          }
          try
          {
-            Thread.sleep(15L * 60L * 1000L);
+            Thread.sleep(sleepTime);
          }
          catch (InterruptedException e)
          {

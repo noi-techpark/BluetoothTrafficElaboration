@@ -46,4 +46,5 @@ public class ElaborationsInfo
    boolean             taskThreadAlive;
    boolean             tashThreadRunning;
    ArrayList<TaskInfo> tasks = new ArrayList<TaskInfo>();
+   long                sleepingUntil;
 }

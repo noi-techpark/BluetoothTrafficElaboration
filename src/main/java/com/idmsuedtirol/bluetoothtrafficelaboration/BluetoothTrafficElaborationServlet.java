@@ -76,6 +76,7 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
          synchronized (this.taskThread.exclusiveLock)
          {
             elaborationsInfo.tashThreadRunning = !this.taskThread.sleeping;
+            elaborationsInfo.sleepingUntil = this.taskThread.sleepingUntil;
          }
 
          elaborationsInfo.tasks.addAll(this.databaseHelper.newSelectTaskInfo());

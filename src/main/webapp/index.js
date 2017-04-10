@@ -86,6 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
          var tasktable = document.getElementById('task');
          document.getElementById('sched_live').className = data.taskThreadAlive ? 'alive' : 'dead';
          document.getElementById('task_thread_status').className = data.tashThreadRunning ? 'running' : 'sleeping';
+         document.getElementById('sleepingUntil').innerText = data.sleepingUntil == 0 ? '' : new Date(data.sleepingUntil).toString();
          var tasks = data.tasks;
          // remove previuos data
          for (var i = 0; i < prevTaskTableRows.length; i++)
