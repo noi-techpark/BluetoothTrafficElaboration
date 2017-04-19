@@ -28,7 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 with params as
 (
    select   ?::int as period,
-            ?::int as station_id
+            ?::int as station_id,
+            19     as type_id
 )
 ,
 stations_min_max as
@@ -46,18 +47,26 @@ stations_min_max as
             from measurementstringhistory h
            where type_id = 15
              and h.station_id = p.station_id
-          ) max_timestamp
-     from params p
+          ) max_timestamp,
+          (
+          select max(timestamp)::date - 1
+            from elaborationhistory eh
+           where eh.period = p.period
+             and eh.station_id = p.station_id
+             and eh.type_id = p.type_id
+          ) elaboration_timestamp
+          from params p
 )
 ,
 calc_min_max as
 (
    select *,
           GREATEST(min_timestamp::date, 
-                   '2017-01-01'::date, -- TODO: 24 hours before last timestamp in elaboration history
+                   elaboration_timestamp, -- TODO: 24 hours before last timestamp in elaboration history
                    '2017-01-01'::date  -- Limit new elaborations from year 2017
                    )::timestamp as start_calc
      from stations_min_max
+    where min_timestamp is not null -- exclude stations with no data
 )
 ,
 series as
@@ -90,14 +99,16 @@ result as
                and m.timestamp < time_window_end
           ) as value,
           station_id,
-          19 as type_id,
+          type_id,
           period
      from range r
 )
 select deltart((select array_agg(result::intime.elaborationhistory) from result),
+               start_calc    + period/2 * '1 second'::interval,
+               max_timestamp + period/2 * '1 second'::interval,
+               station_id,
+               type_id,
+               period),
        start_calc    + period/2 * '1 second'::interval,
-       max_timestamp + period/2 * '1 second'::interval,
-       station_id,
-       19,
-       period)
+       max_timestamp + period/2 * '1 second'::interval
   from calc_min_max

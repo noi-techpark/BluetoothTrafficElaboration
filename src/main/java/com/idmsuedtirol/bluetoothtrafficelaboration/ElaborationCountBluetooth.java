@@ -26,6 +26,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -37,6 +39,9 @@ import com.idmsuedtirol.bluetoothtrafficelaboration.DatabaseHelper.ConnectionRea
  */
 public class ElaborationCountBluetooth
 {
+
+   static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
    static String doElaboration(DatabaseHelper databaseHelper, final String args) throws SQLException, IOException
    {
 
@@ -53,18 +58,31 @@ public class ElaborationCountBluetooth
             for (int s = 0; s < activeStations.size(); s++)
             {
                Station station = activeStations.get(s);
-               result.append(String.format("%s{ id:%3d, name:%-14s, log:",
+               result.append(String.format("%s{ id:%3d, name:%-14s",
                                            s == 0 ? "" : " ",
                                            station.id,
                                            "'" + StringEscapeUtils.escapeEcmaScript(station.stationcode) + "'"));
                ps.setInt(1, Integer.parseInt(args));
                ps.setInt(2, station.id);
                ResultSet rs = ps.executeQuery();
-               if (!rs.next())
-                  throw new SQLException("one row expected");
-               Array array = rs.getArray(1);
-               Integer[] counters = (Integer[]) array.getArray();
-               result.append(String.format("{ins:%4d, upd:%4d, del:%4d}}", counters[2], counters[1], counters[0]));
+               if (rs.next())
+               {
+                  Timestamp window_start = rs.getTimestamp(2);
+                  Timestamp window_end = rs.getTimestamp(3);
+                  result.append(String.format(", window_start:'%s', window_end:'%s'",
+                                              SDF.format(window_start),
+                                              SDF.format(window_end)));
+                  Array array = rs.getArray(1);
+                  Integer[] counters = (Integer[]) array.getArray();
+                  result.append(String.format(", log:{ins:%4d, upd:%4d, del:%4d}}",
+                                              counters[2],
+                                              counters[1],
+                                              counters[0]));
+               }
+               else
+               {
+                  result.append("}");
+               }
                result.append(s < activeStations.size() - 1 ? ",\n" : "");
                conn.commit();
             }
