@@ -125,14 +125,15 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationCountBluetooth.doElaboration(this.databaseHelper, task.args);
                }
+               else if (task.function_name.equals("create_bluetooth_lhv"))
+               {
+                  run_output = ElaborationCreateBluetoothLhv.doElaboration(this.databaseHelper, task.args);
+               }
                else
                {
                   // TODO remove fake elaboration
                   Thread.sleep(5000);
                }
-               // TODO remove fake exception
-               if (i == 5)
-                  throw new IllegalStateException();
                status = "DONE";
             }
          }
