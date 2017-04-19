@@ -34,24 +34,24 @@ min_max as
           p.type_id,
           (
              select AVG((trafficstreetfactor.factor * trafficstreetfactor.hv_perc))
-               FROM intime.trafficstreetfactor
+               FROM trafficstreetfactor
               where id_spira = p.station_id
           ) heavy_perc,
           (select min(timestamp)
-            from davide.elaborationhistory eh
+            from elaborationhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = 19
           ) min_timestamp, 
           (select max(timestamp)
-            from davide.elaborationhistory eh
+            from elaborationhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = 19
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from davide.elaborationhistory eh
+            from elaborationhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.type_id
@@ -93,7 +93,7 @@ result as
           current_timestamp created_on,
           time_window_center as timestamp,
           ( select value::int - (value::int * heavy_perc / 100)::int
-              from davide.elaborationhistory m
+              from elaborationhistory m
              where m.station_id = r.station_id
                and m.period = r.period
                and m.type_id = 19
