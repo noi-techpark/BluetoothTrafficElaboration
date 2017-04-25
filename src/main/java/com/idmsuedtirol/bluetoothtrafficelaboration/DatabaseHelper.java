@@ -122,6 +122,29 @@ public class DatabaseHelper
       return result;
    }
 
+   ArrayList<Station> newSelectLinkStations() throws SQLException, IOException
+   {
+      ArrayList<Station> result = this.newConnection(new ConnectionReady<ArrayList<Station>>()
+      {
+         @Override
+         public ArrayList<Station> connected(Connection conn) throws SQLException, IOException
+         {
+            ArrayList<Station> result = new ArrayList<Station>();
+            String query = readResource(this.getClass(), "stations_bluetooth_link.sql");
+            ResultSet rs = conn.createStatement().executeQuery(query);
+            while (rs.next())
+            {
+               Station station = new Station();
+               station.id = rs.getInt("id");
+               station.stationcode = rs.getString("stationcode");
+               result.add(station);
+            }
+            return result;
+         }
+      });
+      return result;
+   }
+
    ArrayList<TaskInfo> newSelectTaskInfo() throws SQLException, IOException
    {
       ArrayList<TaskInfo> result = this.newConnection(new ConnectionReady<ArrayList<TaskInfo>>()

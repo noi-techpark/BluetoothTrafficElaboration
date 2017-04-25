@@ -129,6 +129,10 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationCreateBluetoothLhv.doElaboration(this.databaseHelper, task.args);
                }
+               else if (task.function_name.equals("create_matches"))
+               {
+                  run_output = ElaborationMatchBluetooth.doElaboration(this.databaseHelper, task.args);
+               }
                else
                {
                   // TODO remove fake elaboration

@@ -92,7 +92,7 @@ result as
    select null::bigint id,
           current_timestamp created_on,
           time_window_center as timestamp,
-          ( select value::int - (value::int * heavy_perc / 100)::int
+          ( select value - floor(value * heavy_perc / 100)
               from elaborationhistory m
              where m.station_id = r.station_id
                and m.period = r.period
