@@ -141,6 +141,10 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationModeMatchBluetooth.doElaboration(this.databaseHelper, task.args);
                }
+               else if (task.function_name.equals("compute_bspeed"))
+               {
+                  run_output = ElaborationSpeedMatchBluetooth.doElaboration(this.databaseHelper, task.args);
+               }
                else
                {
                   // TODO remove fake elaboration
