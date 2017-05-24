@@ -133,6 +133,10 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationMatchBluetooth.doElaboration(this.databaseHelper, task.args);
                }
+               else if (task.function_name.equals("count_match_intime"))
+               {
+                  run_output = ElaborationCountMatchBluetooth.doElaboration(this.databaseHelper, task.args);
+               }
                else
                {
                   // TODO remove fake elaboration

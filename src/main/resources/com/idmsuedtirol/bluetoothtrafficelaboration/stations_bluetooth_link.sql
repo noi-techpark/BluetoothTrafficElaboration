@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -- Davide Montesin <d@vide.bz>
 
  select id, name as stationcode
-   from intime.station
+   from station
   where stationtype = 'Linkstation'
     and active
   order by id
