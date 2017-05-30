@@ -172,7 +172,7 @@ result as (
 select null::bigint id,
        current_timestamp created_on,
        time_window_center as timestamp,
-       mode_value as value,
+       mode_value + 15 as value, -- use center
        station_id,
        output_type_id as type_id,
        period

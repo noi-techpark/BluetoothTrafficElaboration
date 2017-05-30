@@ -151,9 +151,9 @@ public class TaskThread extends Thread
                   Thread.sleep(5000);
                }
                status = "DONE";
-               long start = System.currentTimeMillis();
+               // long start = System.currentTimeMillis();
                this.databaseHelper.newCommand("analyze elaborationhistory");
-               System.out.println("analyze: " + (System.currentTimeMillis() - start));
+               // System.out.println("analyze: " + (System.currentTimeMillis() - start));
             }
          }
          catch (Exception exxx)
