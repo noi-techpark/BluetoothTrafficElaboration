@@ -99,6 +99,21 @@ public class DatabaseHelper
       return result;
    }
 
+   int newCommand(final String sql) throws SQLException, IOException
+   {
+      int result = this.newConnection(new ConnectionReady<Integer>()
+      {
+         @Override
+         public Integer connected(Connection conn) throws SQLException
+         {
+            conn.createStatement().executeUpdate(sql);
+            conn.commit();
+            return 0;
+         }
+      });
+      return result;
+   }
+
    ArrayList<Station> newSelectBluetoothStations() throws SQLException, IOException
    {
       ArrayList<Station> result = this.newConnection(new ConnectionReady<ArrayList<Station>>()
