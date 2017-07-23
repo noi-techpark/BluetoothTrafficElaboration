@@ -60,7 +60,7 @@ min_max as
              and eh.type_id = p.output_type_id
           ) elaboration_timestamp
      from params p
-     join intime.linkbasicdata link
+     join linkbasicdata link
        on link.station_id = p.station_id
 )
 ,
