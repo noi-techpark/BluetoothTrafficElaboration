@@ -77,7 +77,7 @@ stations_min_max as
           select max(timestamp)::date - 1
             from elaborationhistory eh
            where eh.period = ses.p_period
-             and eh.station_id = ses.origin_id
+             and eh.station_id = ses.link_station_id
              and eh.type_id = ses.elaboration_type_id
           ) elaboration_timestamp
           from start_end_station ses
