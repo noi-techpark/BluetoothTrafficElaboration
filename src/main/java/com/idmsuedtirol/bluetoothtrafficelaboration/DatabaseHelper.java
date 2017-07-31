@@ -64,7 +64,7 @@ public class DatabaseHelper
       try
       {
          conn.setAutoCommit(false);
-         // conn.createStatement().execute("SET search_path to davide, intime");
+         conn.createStatement().execute("SET search_path to intime");
          T result = onReady.connected(conn);
          return result;
       }
