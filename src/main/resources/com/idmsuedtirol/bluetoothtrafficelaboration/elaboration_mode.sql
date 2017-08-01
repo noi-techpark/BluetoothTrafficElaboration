@@ -96,7 +96,7 @@ range as
           time_window_start + period / 2 * '1 second'::interval as time_window_center
      from series
     order by time_window_start
-    limit 500 -- truncate too much long elaborations. must be longer than 2 days.
+    limit 2000 -- truncate too much long elaborations. must be longer than 2 days.
 )
 ,
 samples as
