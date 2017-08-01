@@ -24,10 +24,13 @@ package com.idmsuedtirol.bluetoothtrafficelaboration;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import com.idmsuedtirol.bluetoothtrafficelaboration.DatabaseHelper.ConnectionReady;
 import com.idmsuedtirol.bluetoothtrafficelaboration.ElaborationsInfo.TaskInfo;
 
 /**
@@ -177,6 +180,20 @@ public class TaskThread extends Thread
                return;
          }
       }
+      // Update last elaboration cache
+      this.databaseHelper.newConnection(new ConnectionReady<int[]>()
+      {
+         @Override
+         public int[] connected(Connection conn) throws SQLException, IOException
+         {
+            String query = DatabaseHelper.readResource(this.getClass(), "last_elaboration_cache.sql");
+            ResultSet resultSet = conn.createStatement().executeQuery(query);
+            resultSet.next();
+            int nr_insert = resultSet.getInt("nr_insert");
+            int nr_update = resultSet.getInt("nr_update");
+            return new int[]{nr_insert, nr_update};
+         }
+      });
    }
 
    @Override
