@@ -96,7 +96,7 @@ range as
           time_window_start + period / 2 * '1 second'::interval as time_window_center
      from series
     order by time_window_start
-    limit 1000 -- truncate too much long elaborations. must be longer than 2 days.
+    limit 4000 -- truncate too much long elaborations. must be longer than 2 days.
 )
 ,
 samples as
@@ -109,6 +109,7 @@ select *
    and eh.period = 1
    and time_window_start <= eh.timestamp
    and eh.timestamp < time_window_end
+ where eh.timestamp >= '2017-01-01'::date
 )
 ,
 min_max_value as

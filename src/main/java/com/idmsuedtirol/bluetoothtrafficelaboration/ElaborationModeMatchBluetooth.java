@@ -64,6 +64,7 @@ public class ElaborationModeMatchBluetooth
                                            "'" + StringEscapeUtils.escapeEcmaScript(station.stationcode) + "'"));
                ps.setInt(1, Integer.parseInt(args));
                ps.setInt(2, station.id);
+               long start_time = System.currentTimeMillis();
                ResultSet rs = ps.executeQuery();
                if (rs.next())
                {
@@ -78,6 +79,9 @@ public class ElaborationModeMatchBluetooth
                                               counters[2],
                                               counters[1],
                                               counters[0]));
+                  long stop_time = System.currentTimeMillis();
+                  result.append(String.format(", elab_time_ms: %8d",
+                                              stop_time - start_time));
                }
                else
                {
