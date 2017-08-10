@@ -191,6 +191,7 @@ public class TaskThread extends Thread
             resultSet.next();
             int nr_insert = resultSet.getInt("nr_insert");
             int nr_update = resultSet.getInt("nr_update");
+            conn.commit();
             return new int[]{nr_insert, nr_update};
          }
       });
