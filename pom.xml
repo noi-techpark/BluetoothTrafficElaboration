@@ -63,11 +63,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <version>3.5</version>
     </dependency>
     <dependency>
-      <groupId>bz.davide.crashbox</groupId>
-      <artifactId>crashbox-catcher-java-web</artifactId>
-      <version>0.0.1</version>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <version>3.0.1</version>
