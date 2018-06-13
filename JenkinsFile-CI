@@ -6,7 +6,9 @@ pipeline {
     }
     stages {
 	stage('Configure'){
+	    steps{
 		sh 'cat "${BLUETOOTH_TRAFFIC_ELABORATION_HISTORY}" > src/main/resources/app.properties'
+	    }
 	}
         stage('Test') {
             steps {
