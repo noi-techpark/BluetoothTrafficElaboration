@@ -24,6 +24,7 @@ package com.idmsuedtirol.bluetoothtrafficelaboration;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Properties;
 
 import javax.servlet.ServletConfig;
@@ -53,8 +54,9 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
       try
       {
          super.init(config);
-         props.load(new FileInputStream("classpath:app.properties"));
-         String jdbcUrl = System.getProperty(props.getProperty("jdbc.connectionString"));
+         URL resource = getClass().getClassLoader().getResource("app.properties");   
+         props.load(new FileInputStream(resource.getFile()));
+         String jdbcUrl = props.getProperty("jdbc.connectionString");
          // TODO driver as system parameter
          String driver = "org.postgresql.Driver"; // System.getProperty(JDBC_CONNECTION_DRIVER);
          this.databaseHelper = new DatabaseHelper(driver, jdbcUrl);
