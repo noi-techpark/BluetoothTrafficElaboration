@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment{
-	BLUETOOTH_TRAFFIC_ELABORATION_PROPS=credentials('bluetoothtrafficelaboration.properties')
+	BLUETOOTH_TRAFFIC_ELABORATION_PROPS=credentials('bluetoothtrafficelaboration-prod.properties')
     }
     stages {
 	stage('Configure'){
@@ -22,7 +22,7 @@ pipeline {
 	}
 	stage('Archive'){
             steps {
-               sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
+               sh 'cp target/bluetoothtrafficelaboration.war /var/builds/prod-server-dc/'
             }
 	}
     }
