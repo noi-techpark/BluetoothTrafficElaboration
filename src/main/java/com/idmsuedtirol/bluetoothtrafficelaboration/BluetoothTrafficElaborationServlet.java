@@ -21,8 +21,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.idmsuedtirol.bluetoothtrafficelaboration;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Properties;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -40,7 +42,7 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
 {
    private static final String JDBC_CONNECTION_STRING = "JDBC_CONNECTION_STRING";
    private static final String JDBC_CONNECTION_DRIVER = "JDBC_CONNECTION_DRIVER";
-
+   private final Properties props = new Properties();
    DatabaseHelper              databaseHelper;
 
    TaskThread                  taskThread;
@@ -51,7 +53,8 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
       try
       {
          super.init(config);
-         String jdbcUrl = System.getProperty(JDBC_CONNECTION_STRING);
+         props.load(new FileInputStream("classpath:app.properties"));
+         String jdbcUrl = System.getProperty(props.getProperty("jdbc.connectionString"));
          // TODO driver as system parameter
          String driver = "org.postgresql.Driver"; // System.getProperty(JDBC_CONNECTION_DRIVER);
          this.databaseHelper = new DatabaseHelper(driver, jdbcUrl);
