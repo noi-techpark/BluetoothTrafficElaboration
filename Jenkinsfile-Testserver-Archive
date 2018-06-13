@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    environment{
+	BLUETOOTH_TRAFFIC_ELABORATION_HISTORY=credentials('bluetoothtrafficelaboration.properties')
+    }
+    stages {
+	stage('Configure'){
+	    steps{
+		sh 'cat "${BLUETOOTH_TRAFFIC_ELABORATION_HISTORY}" > src/main/resources/app.properties'
+	    }
+	}
+        stage('Test') {
+            steps {
+               sh 'mvn clean test'
+            }
+        }
+	stage('Build'){
+            steps {
+               sh 'mvn clean package'
+            }
+	}
+	stage('Archive'){
+            steps {
+               sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
+            }
+	}
+    }
+}
