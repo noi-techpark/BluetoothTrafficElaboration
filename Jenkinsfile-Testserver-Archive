@@ -3,6 +3,7 @@ pipeline {
 
     environment{
 	BLUETOOTH_TRAFFIC_ELABORATION_PROPS=credentials('bluetoothtrafficelaboration.properties')
+	TESTSERVER_TOMCAT_ENDPOINT=credentials('testserver-tomcat8-url')
     }
     stages {
 	stage('Configure'){
@@ -25,5 +26,10 @@ pipeline {
                sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
             }
 	}
+	stage('Deploy') {
+            steps{
+                sh 'mvn tomcat:redeploy -Dmaven.tomcat.url=${TESTSERVER_TOMCAT_ENDPOINT} -Dmaven.tomcat.server=testServer'
+            }
+        }
     }
 }
