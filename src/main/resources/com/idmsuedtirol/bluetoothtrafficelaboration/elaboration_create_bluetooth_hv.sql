@@ -38,20 +38,20 @@ min_max as
               where id_spira = p.station_id
           ) heavy_perc,
           (select min(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = 19
           ) min_timestamp, 
           (select max(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = 19
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.type_id
@@ -77,6 +77,7 @@ series as
                           max_timestamp, 
                           period * '1 second'::interval) as time_window_start
      from calc_min_max
+    where heavy_perc is not null
 )
 ,
 range as
@@ -91,20 +92,21 @@ result as
 (
    select null::bigint id,
           current_timestamp created_on,
+          period,
           time_window_center as timestamp,
-          ( select floor(value * heavy_perc / 100)
-              from elaborationhistory m
+          ( select floor(double_value * heavy_perc / 100)
+              from measurementhistory m
              where m.station_id = r.station_id
                and m.period = r.period
                and m.type_id = 19
                and m.timestamp = r.time_window_center
           ) as value,
+          -1 as provenience_id,
           station_id,
-          type_id,
-          period
+          type_id
      from range r
 )
-select deltart((select array_agg(result::intime.elaborationhistory) from result),
+select deltart((select array_agg(result::measurementhistory) from result),
                start_calc    + period/2 * '1 second'::interval,
                max_timestamp + period/2 * '1 second'::interval,
                station_id,

@@ -75,7 +75,7 @@ stations_min_max as
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = ses.p_period
              and eh.station_id = ses.link_station_id
              and eh.type_id = ses.elaboration_type_id
@@ -144,7 +144,7 @@ select null::bigint id,
    and (start2_timestamp is null or start2_timestamp > finish_timestamp)
  group by 1, 2, timestamp, 4, link_station_id, elaboration_type_id, p_period
 )
-select deltart((select array_agg(result::intime.elaborationhistory) from result),
+select deltart((select array_agg(result::intimev2.measurementhistory) from result),
                start_calc,
                max_timestamp,
                link_station_id,
