@@ -32,11 +32,17 @@ min_max as
    select p.period,
           p.station_id,
           p.type_id,
-          (
-             select AVG((trafficstreetfactor.factor * trafficstreetfactor.hv_perc))
-               FROM trafficstreetfactor
-              where id_spira = p.station_id
-          ) heavy_perc,
+          -- 2019-06-19 d@vide.bz: if info is missing, then use 0% for heavy vehicles
+          coalesce((
+             select AVG((m.json->>'factor')::decimal * (m.json->>'hv_perc')::decimal )
+			   from intimev2.edge e
+			   join intimev2.station s 
+			     on e.edge_data_id = s.id
+			   join intimev2.metadata m 
+			     on s.meta_data_id = m.id
+			  where s.stationtype = 'TrafficStreetFactor'
+			    and e.destination_id = p.station_id
+          ),0) heavy_perc,
           (select min(timestamp)
             from measurementhistory eh
            where eh.period = p.period
