@@ -155,7 +155,7 @@ public class TaskThread extends Thread
                }
                status = "DONE";
                // long start = System.currentTimeMillis();
-               this.databaseHelper.newCommand("analyze elaborationhistory");
+               this.databaseHelper.newCommand("analyze measurementhistory");
                // System.out.println("analyze: " + (System.currentTimeMillis() - start));
             }
          }
