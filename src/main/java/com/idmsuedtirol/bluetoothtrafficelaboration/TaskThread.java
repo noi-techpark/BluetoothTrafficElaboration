@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.idmsuedtirol.bluetoothtrafficelaboration;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -209,6 +210,16 @@ public class TaskThread extends Thread
          }
       }
 
+   }
+   
+   /*
+    * Method used only for development/debugging
+    */
+   public static void main(String[] args) throws FileNotFoundException, IOException 
+   {
+	   DatabaseHelper databaseHelper = BluetoothTrafficElaborationServlet.createDatabaseHelper();
+	   TaskThread taskThread = new TaskThread(databaseHelper);
+	   taskThread.run();
    }
 
 }
