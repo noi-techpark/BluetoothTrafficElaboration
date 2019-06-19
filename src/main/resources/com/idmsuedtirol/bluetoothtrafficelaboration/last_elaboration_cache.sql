@@ -94,8 +94,8 @@ upd as (
 )
 ,
 ins as (
-   insert into measurement(station_id, type_id, period, timestamp, double_value)
-   select station_id, type_id, period, new_timestamp as timestamp, new_value
+   insert into measurement(created_on, station_id, type_id, period, timestamp, double_value)
+   select current_timestamp, station_id, type_id, period, new_timestamp as timestamp, new_value
      from diff
     where old_timestamp is null
    returning *
