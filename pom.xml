@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <name>bluetoothtrafficelaboration Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <properties>
-  	<java.version>7</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <java.version>8</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
     <dependency>
