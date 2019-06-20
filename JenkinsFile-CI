@@ -1,18 +1,10 @@
 pipeline {
     agent any
 
-    environment{
-	BLUETOOTH_TRAFFIC_ELABORATION_HISTORY=credentials('bluetoothtrafficelaboration.properties')
-    }
     stages {
-	stage('Configure'){
-	    steps{
-		sh 'cat "${BLUETOOTH_TRAFFIC_ELABORATION_HISTORY}" > src/main/resources/app.properties'
-	    }
-	}
         stage('Test') {
             steps {
-               sh 'mvn clean test'
+               sh 'mvn -B -U clean compile test'
             }
         }
     }
