@@ -46,13 +46,13 @@ start_end_station as
           -- subselects ensures that there is no more than one record for this link_station_id
           (
              select origin_id
-               from linkbasicdata
-              where station_id = link_station_id
+               from intimev2.edge
+              where edge_data_id = link_station_id
           ) origin_id,
           (
              select destination_id
-               from linkbasicdata
-              where station_id = link_station_id
+               from intimev2.edge
+              where edge_data_id = link_station_id
           ) destination_id
      from params
 )
@@ -75,7 +75,7 @@ stations_min_max as
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = ses.p_period
              and eh.station_id = ses.link_station_id
              and eh.type_id = ses.elaboration_type_id
@@ -115,7 +115,7 @@ matches as
                where finish.type_id = 15
                  and finish.station_id = start.destination_id
                  and start.timestamp < finish.timestamp
-                 and start.value = finish.value -- same mac address
+                 and start.string_value = finish.string_value -- same mac address
                  and finish.timestamp < start.timestamp + '3600 seconds'::interval
           ) finish_timestamp,
           (
@@ -124,7 +124,7 @@ matches as
                where finish.type_id = 15
                  and station_id = start.origin_id
                  and start.timestamp < finish.timestamp
-                 and start.value = finish.value -- same mac address
+                 and start.string_value = finish.string_value -- same mac address
                  and finish.timestamp < start.timestamp + '3600 seconds'::interval
           ) start2_timestamp
      from start_point start
@@ -134,17 +134,19 @@ result as
 (
 select null::bigint id,
        current_timestamp created_on,
+       p_period,
        timestamp,
        (extract(epoch from finish_timestamp - timestamp)) as value,
+       -1 as provenience_id,
        link_station_id,
-       elaboration_type_id,
-       p_period
+       elaboration_type_id
   from matches
  where finish_timestamp is not null
    and (start2_timestamp is null or start2_timestamp > finish_timestamp)
- group by 1, 2, timestamp, 4, link_station_id, elaboration_type_id, p_period
+    -- 2019-06-19 d@vide.bz: remove identical rows with group by
+ group by 1,2,3,4,5,6,7,8
 )
-select deltart((select array_agg(result::intime.elaborationhistory) from result),
+select deltart((select array_agg(result::intimev2.measurementhistory) from result),
                start_calc,
                max_timestamp,
                link_station_id,

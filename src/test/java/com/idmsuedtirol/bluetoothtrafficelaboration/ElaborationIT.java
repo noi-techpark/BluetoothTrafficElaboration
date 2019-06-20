@@ -24,7 +24,7 @@ public class ElaborationIT {
 		  URL resource = getClass().getClassLoader().getResource("app.properties");
 		  props.load(new FileInputStream(resource.getFile()));
 		  String jdbcUrl = props.getProperty("jdbc.connectionString");
-		  databaseHelper = new DatabaseHelper("org.postgresql.Driver", jdbcUrl);
+		  databaseHelper = new DatabaseHelper(jdbcUrl);
 
 	}
 	@Test

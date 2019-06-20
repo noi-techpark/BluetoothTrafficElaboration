@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package com.idmsuedtirol.bluetoothtrafficelaboration;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
@@ -43,7 +44,7 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
 {
    private static final String JDBC_CONNECTION_STRING = "JDBC_CONNECTION_STRING";
    private static final String JDBC_CONNECTION_DRIVER = "JDBC_CONNECTION_DRIVER";
-   private final Properties props = new Properties();
+   
    DatabaseHelper              databaseHelper;
 
    TaskThread                  taskThread;
@@ -54,13 +55,7 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
       try
       {
          super.init(config);
-         URL resource = getClass().getClassLoader().getResource("app.properties");   
-         props.load(new FileInputStream(resource.getFile()));
-         String jdbcUrl = props.getProperty("jdbc.connectionString");
-         // TODO driver as system parameter
-         String driver = "org.postgresql.Driver"; // System.getProperty(JDBC_CONNECTION_DRIVER);
-         this.databaseHelper = new DatabaseHelper(driver, jdbcUrl);
-
+         this.databaseHelper = createDatabaseHelper();
          this.taskThread = new TaskThread(this.databaseHelper);
          this.taskThread.start();
       }
@@ -69,6 +64,16 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
          throw new ServletException(exxx);
       }
 
+   }
+   
+   static DatabaseHelper createDatabaseHelper() throws FileNotFoundException, IOException
+   {
+       URL resource = BluetoothTrafficElaborationServlet.class.getClassLoader().getResource("app.properties");   
+       Properties props = new Properties();
+       props.load(new FileInputStream(resource.getFile()));
+       String jdbcUrl = props.getProperty("jdbc.connectionString");
+       DatabaseHelper result = new DatabaseHelper(jdbcUrl);
+       return result;
    }
 
    @Override

@@ -76,7 +76,8 @@ public class ElaborationCreateBluetoothLhv
                                                  SDF.format(window_end)));
                      Array array = rs.getArray(1);
                      Integer[] counters = (Integer[]) array.getArray();
-                     result.append(String.format(", log:{ins:%4d, upd:%4d, del:%4d}}",
+                     result.append(String.format(", log:{analyzed: %4d, ins:%4d, upd:%4d, del:%4d}}",
+                                                 counters[3],
                                                  counters[2],
                                                  counters[1],
                                                  counters[0]));

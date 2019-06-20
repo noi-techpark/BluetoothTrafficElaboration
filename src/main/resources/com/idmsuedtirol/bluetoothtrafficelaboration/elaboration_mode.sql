@@ -48,20 +48,20 @@ min_max as
           p.output_type_id,
           p.input_type_id,
           (select min(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = 1
              and eh.station_id = p.station_id
              and eh.type_id = p.input_type_id
           ) min_timestamp, 
           (select max(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = 1
              and eh.station_id = p.station_id
              and eh.type_id = p.input_type_id
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.output_type_id
@@ -103,7 +103,7 @@ samples as
 (
 select *
   from range
-  join elaborationhistory eh
+  join measurementhistory eh
     on eh.type_id = input_type_id
    and eh.station_id = range.station_id
    and eh.period = 1
@@ -115,11 +115,11 @@ select *
 min_max_value as
 (
    select *,
-          floor((select min(value)
+          floor((select min(double_value)
              from samples
             where samples.time_window_start = range.time_window_start
           )) min_value,
-          ceil((select max(value)
+          ceil((select max(double_value)
              from samples
             where samples.time_window_start = range.time_window_start
           )) max_value,
@@ -143,8 +143,8 @@ select *,
        (select count(*)
           from samples
          where samples.time_window_start = min_max_value_series.time_window_start
-           and value_step <= samples.value
-           and samples.value < value_step + 30)
+           and value_step <= samples.double_value
+           and samples.double_value < value_step + 30)
        count
   from min_max_value_series
 )
@@ -172,14 +172,15 @@ select *,
 result as (
 select null::bigint id,
        current_timestamp created_on,
+       period,
        time_window_center as timestamp,
-       mode_value + 15 as value, -- use center
+       coalesce(mode_value + 15, -1) as value, -- use center -- 2019-06-19 d@vide.bz: value can't anymore be null, using coalesce(x, -1) if mode is not calcolable
+       -1 as provenience_id,
        station_id,
-       output_type_id as type_id,
-       period
+       output_type_id as type_id
   from mode
 )
-select deltart((select array_agg(result::intime.elaborationhistory) from result),
+select deltart((select array_agg(result::intimev2.measurementhistory) from result),
                start_calc    + period/2 * '1 second'::interval,
                max_timestamp + period/2 * '1 second'::interval,
                station_id,

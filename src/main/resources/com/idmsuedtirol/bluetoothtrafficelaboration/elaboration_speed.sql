@@ -39,28 +39,28 @@ min_max as
           p.station_id,
           p.output_type_id,
           p.input_type_id,
-          link.length link_length,
+          (json->>'length')::numeric link_length,
           (select min(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.input_type_id
           ) min_timestamp, 
           (select max(timestamp)
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.input_type_id
           ) max_timestamp,
           (
           select max(timestamp)::date - 1
-            from elaborationhistory eh
+            from measurementhistory eh
            where eh.period = p.period
              and eh.station_id = p.station_id
              and eh.type_id = p.output_type_id
           ) elaboration_timestamp
      from params p
-     join linkbasicdata link
+     join intimev2.metadata link
        on link.station_id = p.station_id
 )
 ,
@@ -98,20 +98,21 @@ result as
 (
    select null::bigint id,
           current_timestamp created_on,
+          period,
           time_window_center as timestamp,
-          ( select (link_length/value)*3.6
-              from elaborationhistory m
+          ( select (link_length/double_value)*3.6
+              from measurementhistory m
              where m.station_id = r.station_id
                and m.period = r.period
                and m.type_id = input_type_id
                and m.timestamp = r.time_window_center
           ) as value,
+          -1 as provenience_id,
           station_id,
-          output_type_id,
-          period
+          output_type_id
      from range r
 )
-select deltart((select array_agg(result::intime.elaborationhistory) from result),
+select deltart((select array_agg(result::intimev2.measurementhistory) from result),
                start_calc    + period/2 * '1 second'::interval,
                max_timestamp + period/2 * '1 second'::interval,
                station_id,

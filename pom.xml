@@ -27,15 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <version>0.0.1-SNAPSHOT</version>
   <name>bluetoothtrafficelaboration Maven Webapp</name>
   <url>http://maven.apache.org</url>
-  <repositories>
-    <repository>
-      <id>crashbox-repository</id>
-      <url>http://davide.bz/maven/</url>
-      <snapshots>
-        <updatePolicy>always</updatePolicy>
-      </snapshots>
-    </repository>
-  </repositories>
   <properties>
   	<java.version>7</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -61,11 +52,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.5</version>
-    </dependency>
-   <dependency>
-     <groupId>io.sentry</groupId>
-      <artifactId>sentry</artifactId>
-      <version>1.7.12</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>

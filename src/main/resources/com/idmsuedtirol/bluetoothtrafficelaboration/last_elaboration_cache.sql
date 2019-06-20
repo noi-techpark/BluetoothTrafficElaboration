@@ -37,19 +37,19 @@ with bluetoot_types as
 old_values as
 (
    select station_id, type_id, period,
-          timestamp, value
-     from elaboration
+          timestamp, double_value
+     from measurement
      join bluetoot_types
-       on elaboration.type_id = bluetoot_types.b_type_id
+       on measurement.type_id = bluetoot_types.b_type_id
 )
 ,
 pre_new_values as
 (
    select *,
-       row_number() over (partition by station_id, type_id, period order by timestamp desc, value) rownr
-  from elaborationhistory
+       row_number() over (partition by station_id, type_id, period order by timestamp desc, double_value) rownr
+  from measurementhistory
   join bluetoot_types
-    on elaborationhistory.type_id = bluetoot_types.b_type_id
+    on measurementhistory.type_id = bluetoot_types.b_type_id
  where timestamp >= now()::date - '1 day'::interval -- search last values between now and the day before only
 )
 ,
@@ -66,9 +66,9 @@ diff as
           coalesce(new_values.type_id, old_values.type_id) type_id,
           coalesce(new_values.period, old_values.period) period,
           old_values.timestamp as old_timestamp,
-          old_values.value as old_value,
+          old_values.double_value as old_value,
           new_values.timestamp as new_timestamp,
-          new_values.value as new_value
+          new_values.double_value as new_value
      from new_values
      full outer join old_values
        on new_values.station_id = old_values.station_id
@@ -78,9 +78,9 @@ diff as
 )
 ,
 upd as (
-   update elaboration e
+   update measurement e
       set timestamp = s.new_timestamp,
-          value = s.new_value
+          double_value = s.new_value
      from (select * 
              from diff 
             where old_timestamp is not null
@@ -94,8 +94,8 @@ upd as (
 )
 ,
 ins as (
-   insert into elaboration(station_id, type_id, period, timestamp, value)
-   select station_id, type_id, period, new_timestamp as timestamp, new_value as value
+   insert into measurement(created_on, station_id, type_id, period, timestamp, double_value)
+   select current_timestamp, station_id, type_id, period, new_timestamp as timestamp, new_value
      from diff
     where old_timestamp is null
    returning *

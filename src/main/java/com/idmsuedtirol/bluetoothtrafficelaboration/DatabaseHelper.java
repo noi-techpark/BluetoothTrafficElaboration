@@ -49,10 +49,9 @@ public class DatabaseHelper
       T connected(Connection conn) throws SQLException, IOException;
    }
 
-   public DatabaseHelper(String driver, String jdbcUrl) throws ClassNotFoundException, IOException
+   public DatabaseHelper(String jdbcUrl) throws IOException
    {
       super();
-      Class.forName(driver);
       this.jdbcUrl = jdbcUrl;
       this.schedulerTaskSql = readResource(this.getClass(), "scheduler_task.sql");
 
@@ -64,7 +63,7 @@ public class DatabaseHelper
       try
       {
          conn.setAutoCommit(false);
-         conn.createStatement().execute("SET search_path to intime");
+         conn.createStatement().execute("SET search_path to elaboration, intimev2");
          T result = onReady.connected(conn);
          return result;
       }
