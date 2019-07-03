@@ -33,11 +33,6 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('Archive'){
-            steps {
-                sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
-            }
-        }
         stage('Deploy') {
             steps{
                 sh 'mvn tomcat:redeploy -Dmaven.tomcat.url=${TESTSERVER_TOMCAT_ENDPOINT} -Dmaven.tomcat.server=testServer'
