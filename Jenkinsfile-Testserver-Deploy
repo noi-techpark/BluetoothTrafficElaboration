@@ -1,32 +1,44 @@
 pipeline {
-    agent any
-
+    agent {
+        dockerfile {
+            filename 'docker/dockerfile-java'
+            additionalBuildArgs '--build-arg JENKINS_USER_ID=`id -u jenkins` --build-arg JENKINS_GROUP_ID=`id -g jenkins`'
+        }
+    }
     environment{
-	BLUETOOTH_TRAFFIC_ELABORATION_PROPS=credentials('bluetoothtrafficelaboration.properties')
-	TESTSERVER_TOMCAT_ENDPOINT=credentials('testserver-tomcat8-url')
+        BLUETOOTH_TRAFFIC_ELABORATION_PROPS=credentials('bluetoothtrafficelaboration.properties')
+        TESTSERVER_TOMCAT_ENDPOINT=credentials('testserver-tomcat8-url')
+        DB_URL='test-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com'
+        PGPASSWORD=credentials('bdp-core-test-database-write-password')
+        BDP_USER_NAME='bdp'
     }
     stages {
-	stage('Configure'){
-	    steps{
-		sh 'cat "${BLUETOOTH_TRAFFIC_ELABORATION_PROPS}" > src/main/resources/app.properties'
-	    }
-	}
-        stage('Test') {
-            steps {
-               sh 'mvn clean test verify'
+        stage('import deltafunction'){
+            steps{
+                sh 'psql -h ${DB_URL} -U ${BDP_USER_NAME} bdp < deltart.sql'
             }
         }
-	stage('Build'){
-            steps {
-               sh 'mvn clean package'
+        stage('Configure'){
+            steps{
+                sh 'cat "${BLUETOOTH_TRAFFIC_ELABORATION_PROPS}" > src/main/resources/app.properties'
             }
-	}
-	stage('Archive'){
+        }
+        stage('Test') {
             steps {
-               sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
+                sh 'mvn clean test verify'
             }
-	}
-	stage('Deploy') {
+        }
+        stage('Build'){
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Archive'){
+            steps {
+                sh 'cp target/bluetoothtrafficelaboration.war /var/builds/test-server/'
+            }
+        }
+        stage('Deploy') {
             steps{
                 sh 'mvn tomcat:redeploy -Dmaven.tomcat.url=${TESTSERVER_TOMCAT_ENDPOINT} -Dmaven.tomcat.server=testServer'
             }
