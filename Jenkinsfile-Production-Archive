@@ -10,6 +10,7 @@ pipeline {
         DB_URL='prod-pg-bdp.co90ybcr8iim.eu-west-1.rds.amazonaws.com'
         PGPASSWORD=credentials('bdp-core-prod-database-write-password')
         BDP_USER_NAME='bdp'
+        ARTIFACT_NAME='bluetoothtrafficelaboration'
     }
     stages {
         stage('import deltafunction'){
@@ -40,8 +41,8 @@ pipeline {
         }
         stage('Archive') {
             steps{
-                sh 'mkdir -p /var/builds/prod-server-elaborations'       
-                sh 'cp target/bluetoothtrafficelaboration.war /var/builds/prod-server-elaborations/'
+                sh 'cp target/${ARTIFACT_NAME}.war ${ARTIFACT_NAME}.war'
+                archiveArtifacts artifacts: "${ARTIFACT_NAME}.war", onlyIfSuccessful: true
             }
         }
     }
