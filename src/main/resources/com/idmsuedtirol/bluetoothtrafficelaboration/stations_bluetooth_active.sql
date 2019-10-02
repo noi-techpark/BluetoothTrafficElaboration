@@ -22,6 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  select id, stationcode
    from station
-  where stationtype = 'Bluetoothstation'
+  where stationtype = 'BluetoothStation'
     and active
   order by id
