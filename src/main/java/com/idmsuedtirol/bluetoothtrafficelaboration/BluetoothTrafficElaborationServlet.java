@@ -66,7 +66,7 @@ public class BluetoothTrafficElaborationServlet extends HttpServlet
 
    }
    
-   static DatabaseHelper createDatabaseHelper() throws FileNotFoundException, IOException
+   static DatabaseHelper createDatabaseHelper() throws FileNotFoundException, IOException, ClassNotFoundException
    {
        URL resource = BluetoothTrafficElaborationServlet.class.getClassLoader().getResource("app.properties");   
        Properties props = new Properties();
