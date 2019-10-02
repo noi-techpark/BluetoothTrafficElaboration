@@ -215,7 +215,7 @@ public class TaskThread extends Thread
    /*
     * Method used only for development/debugging
     */
-   public static void main(String[] args) throws FileNotFoundException, IOException 
+   public static void main(String[] args) throws FileNotFoundException, IOException, ClassNotFoundException 
    {
 	   DatabaseHelper databaseHelper = BluetoothTrafficElaborationServlet.createDatabaseHelper();
 	   TaskThread taskThread = new TaskThread(databaseHelper);

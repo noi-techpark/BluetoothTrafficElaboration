@@ -49,9 +49,10 @@ public class DatabaseHelper
       T connected(Connection conn) throws SQLException, IOException;
    }
 
-   public DatabaseHelper(String jdbcUrl) throws IOException
+   public DatabaseHelper(String jdbcUrl) throws IOException, ClassNotFoundException
    {
       super();
+      Class.forName("org.postgresql.Driver");
       this.jdbcUrl = jdbcUrl;
       this.schedulerTaskSql = readResource(this.getClass(), "scheduler_task.sql");
 
