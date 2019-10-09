@@ -108,7 +108,7 @@ select null::bigint id,
        output_type_id as type_id
   from range
 )
-select deltart((select array_agg(result::intimev2.measurementhistory) from result),
+select deltart((select array_agg(result::intimev2.measurementhistory) from result where value is not null),
                start_calc    + period/2 * '1 second'::interval,
                max_timestamp + period/2 * '1 second'::interval,
                station_id,
