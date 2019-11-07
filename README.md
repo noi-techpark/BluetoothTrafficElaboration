@@ -87,6 +87,37 @@ mvn clean package
 http(s)://host:port/bluetoothtrafficelaboration
 ```
 
+### Configure Elaborations/Tasks
+
+Elaborations can be configured in table **scheduler_task**.
+
+Required columns:
+
+**application_name**: 'vtraffic/plugin\_cs\_monitor'  
+**task_name**       : descriptive name of the task for human  
+**function_name**   : the function used for the elaboration. valid values are listed below  
+**args**            : period/window of the elaboration in seconds (600 = 10min)  
+**calc_order**      : if null elaboration is skipped. If a number it is used to order elaborations sequentially (order is important because elaborations may have dependencies)  
+**enabled**         : 'T'  
+**status**          : 'QUEUED'  
+
+valid function_name values are:
+
+compute\_bspeed  
+count\_bluetooth\_intime  
+count\_match\_intime  
+create\_bluetooth\_lhv  
+create\_matches  
+run\_mode\_intime  
+
+Here an example sql statement on how to add a new elaboration (please modify values before execution):
+
+```
+insert into scheduler_task (application_name,             task_name,          function_name,            args, calc_order, enabled, status)
+                    values ('vtraffic/plugin_cs_monitor', 'descriptive name', 'count_bluetooth_intime',   60,          1, 'T',     'QUEUED');
+
+```
+
 ## Information
 
 ### Support
