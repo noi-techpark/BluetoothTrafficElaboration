@@ -39,7 +39,7 @@ min_max as
           p.station_id,
           p.output_type_id,
           p.input_type_id,
-          (json->>'length')::numeric link_length,
+          ST_LENGTH(linegeometry)::numeric link_length,
           (select min(timestamp)
             from measurementhistory eh
            where eh.period = p.period
@@ -60,8 +60,8 @@ min_max as
              and eh.type_id = p.output_type_id
           ) elaboration_timestamp
      from params p
-     join intimev2.metadata link
-       on link.station_id = p.station_id
+     join intimev2.edge link
+       on link.edge_data_id = p.station_id
 )
 ,
 calc_min_max as
