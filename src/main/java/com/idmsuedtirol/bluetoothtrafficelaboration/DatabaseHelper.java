@@ -64,7 +64,7 @@ public class DatabaseHelper
       try
       {
          conn.setAutoCommit(false);
-         conn.createStatement().execute("SET search_path to elaboration, intimev2");
+         conn.createStatement().execute("SET search_path to elaboration, intimev2, public");
          T result = onReady.connected(conn);
          return result;
       }
