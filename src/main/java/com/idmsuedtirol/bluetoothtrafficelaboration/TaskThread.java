@@ -145,6 +145,10 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationModeMatchBluetooth.doElaboration(this.databaseHelper, task.args);
                }
+               else if (task.function_name.equals("run_mode_intime_100kmh"))
+               {
+                  run_output = ElaborationModeMatchBluetooth100kmh.doElaboration(this.databaseHelper, task.args);
+               }
                else if (task.function_name.equals("compute_bspeed"))
                {
                   run_output = ElaborationSpeedMatchBluetooth.doElaboration(this.databaseHelper, task.args);
