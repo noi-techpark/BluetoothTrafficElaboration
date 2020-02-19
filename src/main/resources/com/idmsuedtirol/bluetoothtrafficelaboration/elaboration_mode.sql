@@ -174,7 +174,9 @@ select null::bigint id,
        current_timestamp created_on,
        period,
        time_window_center as timestamp,
-       coalesce(mode_value + 15, -1) as value, -- use center -- 2019-06-19 d@vide.bz: value can't anymore be null, using coalesce(x, -1) if mode is not calcolable
+       -- 2019-06-19 d@vide.bz: value can't anymore be null, using coalesce(x, -1) if mode is not calcolable
+       -- 2020-02-19 d@vide.bz: removed coalesce because the "from result where value is not null"
+       mode_value + 15 as value, -- use center  
        -1 as provenience_id,
        station_id,
        output_type_id as type_id
