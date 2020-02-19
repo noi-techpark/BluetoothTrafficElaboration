@@ -153,9 +153,9 @@ public class TaskThread extends Thread
                {
                   run_output = ElaborationSpeedMatchBluetooth.doElaboration(this.databaseHelper, task.args);
                }
-               else if (task.function_name.equals("compute_bspeed"))
+               else if (task.function_name.equals("compute_bspeed_100kmh"))
                {
-                  run_output = ElaborationSpeedMatchBluetooth.doElaboration(this.databaseHelper, task.args);
+                  run_output = ElaborationSpeedMatchBluetooth100kmh.doElaboration(this.databaseHelper, task.args);
                }
                else
                {

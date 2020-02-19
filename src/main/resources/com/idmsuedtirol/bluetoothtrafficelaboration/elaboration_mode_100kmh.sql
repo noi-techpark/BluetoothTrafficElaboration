@@ -114,7 +114,7 @@ select *
    and eh.timestamp < time_window_end
  where eh.timestamp >= '2017-01-01'::date
     -- filter speed >= 100 km/h
-   and (link_length / double_value) * 3.6 >= 100
+    -- and (link_length / double_value) * 3.6 >= 40
 )
 ,
 min_max_value as
