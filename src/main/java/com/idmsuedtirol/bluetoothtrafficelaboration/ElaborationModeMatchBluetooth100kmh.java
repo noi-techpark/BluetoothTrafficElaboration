@@ -52,7 +52,7 @@ public class ElaborationModeMatchBluetooth100kmh
          @Override
          public String connected(Connection conn) throws SQLException, IOException
          {
-            String sql = DatabaseHelper.readResource(this.getClass(), "elaboration_mode.sql");
+            String sql = DatabaseHelper.readResource(this.getClass(), "elaboration_mode_100kmh.sql");
             PreparedStatement ps = conn.prepareStatement(sql);
             StringBuilder result = new StringBuilder("[");
             for (int s = 0; s < activeStations.size(); s++)

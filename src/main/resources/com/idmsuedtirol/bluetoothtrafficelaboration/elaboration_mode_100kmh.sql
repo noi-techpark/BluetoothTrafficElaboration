@@ -38,7 +38,7 @@ with params as
    select   ?::int as period,
             ?::int as station_id,
             21::int as input_type_id,
-           918::int as output_type_id
+          9180::int as output_type_id
 )
 ,
 min_max as
@@ -47,6 +47,7 @@ min_max as
           p.station_id,
           p.output_type_id,
           p.input_type_id,
+          100 as link_length, --ST_LENGTH(linegeometry)::numeric link_length,
           (select min(timestamp)
             from measurementhistory eh
            where eh.period = 1
@@ -67,6 +68,8 @@ min_max as
              and eh.type_id = p.output_type_id
           ) elaboration_timestamp
      from params p
+     join intimev2.edge link
+       on link.edge_data_id = p.station_id
 )
 ,
 calc_min_max as
@@ -110,6 +113,8 @@ select *
    and time_window_start <= eh.timestamp
    and eh.timestamp < time_window_end
  where eh.timestamp >= '2017-01-01'::date
+    -- filter speed >= 100 km/h
+   and (link_length / double_value) * 3.6 >= 100
 )
 ,
 min_max_value as
