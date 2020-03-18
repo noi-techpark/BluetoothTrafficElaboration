@@ -38,7 +38,7 @@ with params as
    select   ?::int as period,
             ?::int as station_id,
             21::int as input_type_id,
-          9180::int as output_type_id
+          5976::int as output_type_id
 )
 ,
 min_max as
@@ -47,7 +47,7 @@ min_max as
           p.station_id,
           p.output_type_id,
           p.input_type_id,
-          100 as link_length, --ST_LENGTH(linegeometry)::numeric link_length,
+          ST_LENGTH(linegeometry)::numeric link_length,
           (select min(timestamp)
             from measurementhistory eh
            where eh.period = 1
@@ -114,7 +114,7 @@ select *
    and eh.timestamp < time_window_end
  where eh.timestamp >= '2017-01-01'::date
     -- filter speed >= 100 km/h
-    -- and (link_length / double_value) * 3.6 >= 40
+   and (link_length / double_value) * 3.6 >= 100
 )
 ,
 min_max_value as
