@@ -38,7 +38,7 @@ with params as
    select   ?::int as period,
             ?::int as station_id,
             21::int as input_type_id,
-          5976::int as output_type_id
+          5968::int as output_type_id
 )
 ,
 min_max as
@@ -70,6 +70,7 @@ min_max as
      from params p
      join intimev2.edge link
        on link.edge_data_id = p.station_id
+    where linegeometry is not null -- skip link station without geometry/length
 )
 ,
 calc_min_max as
@@ -104,7 +105,8 @@ range as
 ,
 samples as
 (
-select *
+select (link_length / double_value) * 3.6 as kmh,
+       *
   from range
   join measurementhistory eh
     on eh.type_id = input_type_id
