@@ -104,17 +104,26 @@ Required columns:
 valid function_name values are:
 
 compute\_bspeed  
+compute\_bspeed\_100kmh  
 count\_bluetooth\_intime  
 count\_match\_intime  
 create\_bluetooth\_lhv  
 create\_matches  
 run\_mode\_intime  
+run\_mode\_intime\_100kmh  
 
 Here an example sql statement on how to add a new elaboration (please modify values before execution):
 
 ```
 insert into scheduler_task (application_name,             task_name,          function_name,            args, calc_order, enabled, status)
                     values ('vtraffic/plugin_cs_monitor', 'descriptive name', 'count_bluetooth_intime',   60,          1, 'T',     'QUEUED');
+                    
+insert into scheduler_task (application_name,             task_name,          function_name,            args, calc_order, enabled, status)
+                    values ('vtraffic/plugin_cs_monitor', 'Bluetooth Elapsed time greater than 100 km/h', 'run_mode_intime_100kmh',   600,       99998, 'T',     'QUEUED');
+
+insert into scheduler_task (application_name,             task_name,          function_name,            args, calc_order, enabled, status)
+                    values ('vtraffic/plugin_cs_monitor', 'speed greater than 100 km/h', 'compute_bspeed_100kmh',   600,       99999, 'T',     'QUEUED');
+                    
 
 ```
 
