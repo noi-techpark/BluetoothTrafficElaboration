@@ -29,8 +29,8 @@ with params as
 (
    select    ?::int as period,
              ?::int as station_id,
-          9180::int as input_type_id,
-           540::int as output_type_id
+          5968::int as input_type_id,
+          5969::int as output_type_id
 )
 ,
 min_max as
@@ -39,7 +39,7 @@ min_max as
           p.station_id,
           p.output_type_id,
           p.input_type_id,
-          100 as link_length, -- ST_LENGTH(linegeometry)::numeric link_length,
+          ST_LENGTH(linegeometry)::numeric link_length,
           (select min(timestamp)
             from measurementhistory eh
            where eh.period = p.period
