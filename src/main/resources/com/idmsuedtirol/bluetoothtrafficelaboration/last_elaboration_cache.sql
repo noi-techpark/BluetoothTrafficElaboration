@@ -30,7 +30,10 @@ with bluetoot_types as
        21, -- 1              CREATE MATCHES
        20, --                COUNT  MATCHES
        918, --               MODE
-       54 --                 SPEED
+       54, --                 SPEED
+       --
+       5968, --              MODE 100 km/h
+       5969  --              SPEED 100 km/h
    ]) as b_type_id
 )
 ,
