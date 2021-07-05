@@ -96,8 +96,7 @@ range as
           time_window_start + period / 2 * '1 second'::interval as time_window_center
      from series
     order by time_window_start
-    limit 24000 -- truncate too much long elaborations. must be longer than 2 days.
-    -- 2021-06-24 d@vide.bz: incremented from 4000 to 24000 to overcome holes of some months in data with period 600
+    limit 4000 -- truncate too much long elaborations. must be longer than 2 days.
 )
 ,
 samples as
